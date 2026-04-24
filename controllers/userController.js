@@ -1,5 +1,6 @@
 const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
   try {
@@ -32,9 +33,12 @@ exports.login = async (req, res) => {
     );
     if (!passVerify) throw new Error("Invalid password");
 
+    const token = jwt.sign({ id: emailVerify._id }, "SECRET_KEY");
+
     res.status(201).json({
       status: "Success",
       message: "Login successfully",
+      token: token,
       data: emailVerify,
     });
   } catch (error) {

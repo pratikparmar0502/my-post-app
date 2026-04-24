@@ -2,12 +2,10 @@ const postModel = require("../models/postModel");
 
 exports.createPost = async (req, res) => {
   try {
-    if (!req.file) throw new Error("Image is required!");
-
     const post = await postModel.create({
       description: req.body.description,
-      user_id: req.body.user_id,
-      image: req.file.path,
+      user_id: req.user.id,
+      images: req.files.map((file) => file.path),
     });
 
     res.status(201).json({
