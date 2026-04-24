@@ -17,3 +17,5 @@ exports.authMiddleware = (req, res, next) => {
     });
   }
 };
+
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZWI0MWNhYzU0MTk4M2FhYmM0Y2E1MiIsImlhdCI6MTc3NzAyNTUwNn0.umEggKSRoer3hkf6phPks7cUzvqvuXbqyh-MFeI3Ils

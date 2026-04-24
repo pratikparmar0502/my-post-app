@@ -15,6 +15,7 @@ mongoose
 var indexRouter = require("./routes/index");
 var userRouter = require("./routes/userRoute");
 var postRouter = require("./routes/postRoute");
+var profileRouter = require("./routes/profileRoute");
 
 var app = express();
 
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", userRouter);
 app.use("/posts", postRouter);
+app.use("/profiles", profileRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
