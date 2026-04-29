@@ -1,6 +1,6 @@
 const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 exports.register = async (req, res) => {
   try {
@@ -33,12 +33,14 @@ exports.login = async (req, res) => {
     );
     if (!passVerify) throw new Error("Invalid password");
 
-    const token = jwt.sign({ id: emailVerify._id }, "SECRET_KEY");
+    const randomToken = crypto.randomBytes(32).toString("hex");
+    emailVerify.token = randomToken;
+    await emailVerify.save();
 
     res.status(201).json({
       status: "Success",
       message: "Login successfully",
-      token: token,
+      token: randomToken,
       data: emailVerify,
     });
   } catch (error) {
@@ -81,6 +83,21 @@ exports.updateUser = async (req, res) => {
       status: "Success",
       message: "User updated",
       data: user,
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: "Fail",
+      message: error.message,
+    });
+  }
+};
+
+exports.getUserByToken = async (req, res) => {
+  try {
+    res.status(200).json({
+      status: "Success",
+      message: "User data retrieved successfully",
+      data: req.user,
     });
   } catch (error) {
     res.status(400).json({

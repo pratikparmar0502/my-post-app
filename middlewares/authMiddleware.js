@@ -1,11 +1,11 @@
-const jwt = require("jsonwebtoken");
+const userModel = require("../models/userModel");
 
-exports.authMiddleware = (req, res, next) => {
+exports.authMiddleware = async (req, res, next) => {
   try {
     const token = req.headers.authorization;
     if (!token) throw new Error("Attach token!");
 
-    const decoded = jwt.verify(token, "SECRET_KEY");
+    const decoded = await userModel.findOne({ token: token });
     if (!decoded) throw new Error("Invalid token!");
 
     req.user = decoded;
@@ -17,5 +17,3 @@ exports.authMiddleware = (req, res, next) => {
     });
   }
 };
-
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZWI0MWNhYzU0MTk4M2FhYmM0Y2E1MiIsImlhdCI6MTc3NzAyNTUwNn0.umEggKSRoer3hkf6phPks7cUzvqvuXbqyh-MFeI3Ils

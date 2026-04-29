@@ -4,7 +4,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const atlasURL =
-  "mongodb+srv://pratikparmar0502:pass123@cluster1.sjixvej.mongodb.net/my-post-app?appName=Cluster1";
+  "mongodb+srv://pratikparmar:PXRTpf0e2UOWPySl@cluster1.sjixvej.mongodb.net/my-post-app?appName=Cluster1";
 
 const mongoose = require("mongoose");
 mongoose
