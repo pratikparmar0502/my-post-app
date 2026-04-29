@@ -1,5 +1,7 @@
 const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const profileModel = require("../models/profileModel");
+const postModel = require("../models/postModel");
 const crypto = require("crypto");
 
 exports.register = async (req, res) => {
@@ -94,15 +96,23 @@ exports.updateUser = async (req, res) => {
 
 exports.getUserByToken = async (req, res) => {
   try {
+    const userId = req.user._id;
+
+    const [profile, posts] = await Promise.all([
+      profileModel.findOne({ user_id: userId }),
+      postModel.find({ user_id: userId }),
+    ]);
+
     res.status(200).json({
       status: "Success",
-      message: "User data retrieved successfully",
-      data: req.user,
+      message: "Complete data retrieved",
+      data: {
+        user: req.user,
+        profile: profile || "No profile created yet",
+        posts: posts,
+      },
     });
   } catch (error) {
-    res.status(400).json({
-      status: "Fail",
-      message: error.message,
-    });
+    res.status(400).json({ status: "Fail", message: error.message });
   }
 };

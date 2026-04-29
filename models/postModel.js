@@ -14,10 +14,6 @@ const postSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    token: {
-      type: String,
-      default: "",
-    },
   },
   { timestamps: true },
 );

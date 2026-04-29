@@ -60,7 +60,7 @@ exports.updatePost = async (req, res) => {
       req.params.id,
       {
         description: req.body.description,
-        image: req.file ? req.file.path : undefined,
+        images: req.files ? req.files.map((file) => file.path) : undefined,
       },
       { new: true },
     );
