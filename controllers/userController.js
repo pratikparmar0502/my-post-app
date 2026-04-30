@@ -4,24 +4,28 @@ const crypto = require("crypto");
 
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, token } = req.body;
-    const hashPassword = await bcrypt.hash(req.body.password, 10);
+    const tokenFromHeader = req.headers.authorization;
+
+    if (!tokenFromHeader) throw new Error("Token missing in headers!");
+
+    const { name, email, password } = req.body;
+
+    const hashPassword = await bcrypt.hash(password, 10);
+
     const user = await userModel.create({
       name,
       email,
       password: hashPassword,
-      token: token,
+      token: tokenFromHeader,
     });
+
     res.status(201).json({
       status: "Success",
-      message: "Registerd successfully",
+      message: "User registered successfully using Header token",
       data: user,
     });
   } catch (error) {
-    res.status(400).json({
-      status: "Fail",
-      message: error.message,
-    });
+    res.status(400).json({ status: "Fail", message: error.message });
   }
 };
 
