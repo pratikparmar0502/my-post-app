@@ -1,15 +1,16 @@
 const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
-const profileModel = require("../models/profileModel");
-const postModel = require("../models/postModel");
 const crypto = require("crypto");
 
 exports.register = async (req, res) => {
   try {
+    const { name, email, password, token } = req.body;
     const hashPassword = await bcrypt.hash(req.body.password, 10);
     const user = await userModel.create({
-      ...req.body,
+      name,
+      email,
       password: hashPassword,
+      token: token,
     });
     res.status(201).json({
       status: "Success",
@@ -35,14 +36,9 @@ exports.login = async (req, res) => {
     );
     if (!passVerify) throw new Error("Invalid password");
 
-    const randomToken = crypto.randomBytes(32).toString("hex");
-    emailVerify.token = randomToken;
-    await emailVerify.save();
-
     res.status(201).json({
       status: "Success",
       message: "Login successfully",
-      token: randomToken,
       data: emailVerify,
     });
   } catch (error) {
@@ -94,25 +90,19 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-exports.getUserByToken = async (req, res) => {
+exports.getNewToken = async (req, res) => {
   try {
-    const userId = req.user._id;
-
-    const [profile, posts] = await Promise.all([
-      profileModel.findOne({ user_id: userId }),
-      postModel.find({ user_id: userId }),
-    ]);
+    const generatedToken = crypto.randomBytes(32).toString("hex");
 
     res.status(200).json({
       status: "Success",
-      message: "Complete data retrieved",
-      data: {
-        user: req.user,
-        profile: profile || "No profile created yet",
-        posts: posts,
-      },
+      message: "Token generated successfully",
+      token: generatedToken,
     });
   } catch (error) {
-    res.status(400).json({ status: "Fail", message: error.message });
+    res.status(400).json({
+      status: "Fail",
+      message: error.message,
+    });
   }
 };
